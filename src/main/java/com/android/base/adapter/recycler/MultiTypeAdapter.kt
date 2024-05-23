@@ -2,9 +2,10 @@ package com.android.base.adapter.recycler
 
 import android.content.Context
 import com.android.base.adapter.DataManager
+import com.android.base.adapter.requireItem
 
 /**
- * @see [MultiTypeAdapter](https://github.com/drakeet/MultiType)
+ * Check out [MultiTypeAdapter](https://github.com/drakeet/MultiType) for more details.
  */
 open class MultiTypeAdapter : com.drakeet.multitype.MultiTypeAdapter, DataManager<Any> {
 
@@ -13,19 +14,17 @@ open class MultiTypeAdapter : com.drakeet.multitype.MultiTypeAdapter, DataManage
     private var dataManager: RecyclerDataManagerImpl<Any>
 
     @Suppress("LeakingThis")
-    constructor(context: Context) : super() {
+    constructor(context: Context, initialTypeCapacity: Int = 0) : super(initialCapacity = initialTypeCapacity) {
         this.context = context
         val items = mutableListOf<Any>()
         dataManager = RecyclerDataManagerImpl(items, this)
-        super.items = items
     }
 
     @Suppress("LeakingThis")
-    constructor(context: Context, items: List<Any>) : super() {
+    constructor(context: Context, items: List<Any>, initialTypeCapacity: Int = 0) : super(initialCapacity = initialTypeCapacity) {
         this.context = context
         val mutableList = items.toMutableList()
         dataManager = RecyclerDataManagerImpl(mutableList, this)
-        super.items = mutableList
     }
 
     override fun add(element: Any) {
@@ -61,7 +60,6 @@ open class MultiTypeAdapter : com.drakeet.multitype.MultiTypeAdapter, DataManage
     }
 
     override fun setDataSource(newDataSource: MutableList<Any>) {
-        super.items = newDataSource
         dataManager.setDataSource(newDataSource)
     }
 
@@ -83,6 +81,14 @@ open class MultiTypeAdapter : com.drakeet.multitype.MultiTypeAdapter, DataManage
 
     override fun getItem(position: Int): Any? {
         return dataManager.getItem(position)
+    }
+
+    override fun requireItem(position: Int): Any {
+        return dataManager.requireItem(position)
+    }
+
+    override fun getItemCount(): Int {
+        return dataManager.getDataSize()
     }
 
     override operator fun contains(element: Any): Boolean {
@@ -112,17 +118,6 @@ open class MultiTypeAdapter : com.drakeet.multitype.MultiTypeAdapter, DataManage
     override fun getDataSize(): Int {
         return dataManager.getDataSize()
     }
-
-    override var items: List<Any>
-        get() = super.items
-        set(value) {
-            if (value is MutableList) {
-                super.items = value
-                dataManager.setDataSource(value)
-            } else {
-                throw IllegalArgumentException("only support MutableList")
-            }
-        }
 
     override fun removeIf(filter: (Any) -> Boolean) {
         dataManager.removeIf(filter)

@@ -12,7 +12,7 @@ import androidx.viewbinding.ViewBinding
  */
 abstract class SimpleRecyclerAdapter<T, VB : ViewBinding>(
     context: Context,
-    data: List<T> = emptyList()
+    data: List<T> = emptyList(),
 ) : RecyclerAdapter<T, BindingViewHolder<VB>>(context, data) {
 
     final override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingViewHolder<VB> {
@@ -28,7 +28,7 @@ abstract class SimpleRecyclerAdapter<T, VB : ViewBinding>(
         if (item != null) {
             bindItem(viewHolder, item)
         } else {
-            bindOnOverPosition(viewHolder, position)
+            onOverPosition(viewHolder, position)
         }
     }
 
@@ -36,8 +36,6 @@ abstract class SimpleRecyclerAdapter<T, VB : ViewBinding>(
 
     protected open fun onViewHolderCreated(viewHolder: BindingViewHolder<VB>) = Unit
 
-    protected open fun bindOnOverPosition(viewHolder: BindingViewHolder<VB>, position: Int) {
-
-    }
+    protected open fun onOverPosition(viewHolder: BindingViewHolder<VB>, position: Int) = Unit
 
 }
