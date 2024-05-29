@@ -64,4 +64,5 @@ interface OneToManyEndpoint<T> {
     fun withKotlinClassLinker(classLinker: (position: Int, item: T) -> KClass<out ItemViewDelegate<T, *>>) {
         withJavaClassLinker { position, item -> classLinker(position, item).java }
     }
+
 }

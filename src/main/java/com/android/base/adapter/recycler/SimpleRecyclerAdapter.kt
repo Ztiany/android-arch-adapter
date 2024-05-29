@@ -13,17 +13,17 @@ import androidx.viewbinding.ViewBinding
 abstract class SimpleRecyclerAdapter<T, VB : ViewBinding>(
     context: Context,
     data: List<T> = emptyList(),
-) : RecyclerAdapter<T, BindingViewHolder<VB>>(context, data) {
+) : BaseRecyclerAdapter<T, ViewBindingViewHolder<VB>>(context, data) {
 
-    final override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingViewHolder<VB> {
-        return BindingViewHolder(provideViewBinding(parent, inflater)).also {
+    final override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewBindingViewHolder<VB> {
+        return ViewBindingViewHolder(provideViewBinding(parent, inflater)).also {
             onViewHolderCreated(it)
         }
     }
 
     abstract fun provideViewBinding(parent: ViewGroup, inflater: LayoutInflater): VB
 
-    override fun onBindViewHolder(viewHolder: BindingViewHolder<VB>, position: Int) {
+    override fun onBindViewHolder(viewHolder: ViewBindingViewHolder<VB>, position: Int) {
         val item = getItem(position)
         if (item != null) {
             bindItem(viewHolder, item)
@@ -32,10 +32,10 @@ abstract class SimpleRecyclerAdapter<T, VB : ViewBinding>(
         }
     }
 
-    abstract fun bindItem(viewHolder: BindingViewHolder<VB>, item: T)
+    abstract fun bindItem(viewHolder: ViewBindingViewHolder<VB>, item: T)
 
-    protected open fun onViewHolderCreated(viewHolder: BindingViewHolder<VB>) = Unit
+    protected open fun onViewHolderCreated(viewHolder: ViewBindingViewHolder<VB>) = Unit
 
-    protected open fun onOverPosition(viewHolder: BindingViewHolder<VB>, position: Int) = Unit
+    protected open fun onOverPosition(viewHolder: ViewBindingViewHolder<VB>, position: Int) = Unit
 
 }

@@ -4,9 +4,6 @@ import android.content.Context
 import com.android.base.adapter.DataManager
 import com.android.base.adapter.requireItem
 
-/**
- * Check out [MultiTypeAdapter](https://github.com/drakeet/MultiType) for more details.
- */
 open class MultiTypeAdapter : com.drakeet.multitype.MultiTypeAdapter, DataManager<Any> {
 
     protected val context: Context
@@ -16,15 +13,13 @@ open class MultiTypeAdapter : com.drakeet.multitype.MultiTypeAdapter, DataManage
     @Suppress("LeakingThis")
     constructor(context: Context, initialTypeCapacity: Int = 0) : super(initialCapacity = initialTypeCapacity) {
         this.context = context
-        val items = mutableListOf<Any>()
-        dataManager = RecyclerDataManagerImpl(items, this)
+        dataManager = RecyclerDataManagerImpl(mutableListOf(), this)
     }
 
     @Suppress("LeakingThis")
     constructor(context: Context, items: List<Any>, initialTypeCapacity: Int = 0) : super(initialCapacity = initialTypeCapacity) {
         this.context = context
-        val mutableList = items.toMutableList()
-        dataManager = RecyclerDataManagerImpl(mutableList, this)
+        dataManager = RecyclerDataManagerImpl(items.toMutableList(), this)
     }
 
     override fun add(element: Any) {

@@ -7,12 +7,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.base.adapter.DataManager
 
 /**
- * @param <T> 当前列表使用的数据类型
  * @author Ztiany
  */
-abstract class RecyclerAdapter<T, VH : RecyclerView.ViewHolder> @JvmOverloads constructor(
+abstract class BaseRecyclerAdapter<T, VH : RecyclerView.ViewHolder> @JvmOverloads constructor(
     protected val context: Context,
-    data: List<T> = emptyList()
+    data: List<T> = emptyList(),
 ) : RecyclerView.Adapter<VH>(), DataManager<T> {
 
     protected val inflater: LayoutInflater by lazy { LayoutInflater.from(context) }

@@ -20,8 +20,8 @@ package com.drakeet.multitype
  * @author Drakeet Xu
  */
 internal class ClassLinkerBridge<T> private constructor(
-  private val javaClassLinker: JavaClassLinker<T>,
-  private val delegates: Array<ItemViewDelegate<T, *>>,
+    private val javaClassLinker: JavaClassLinker<T>,
+    private val delegates: Array<ItemViewDelegate<T, *>>,
 ) : Linker<T> {
 
     override fun index(position: Int, item: T): Int {
@@ -35,8 +35,8 @@ internal class ClassLinkerBridge<T> private constructor(
 
     companion object {
         fun <T> toLinker(
-          javaClassLinker: JavaClassLinker<T>,
-          delegates: Array<ItemViewDelegate<T, *>>,
+            javaClassLinker: JavaClassLinker<T>,
+            delegates: Array<ItemViewDelegate<T, *>>,
         ): Linker<T> {
             return ClassLinkerBridge(javaClassLinker, delegates)
         }

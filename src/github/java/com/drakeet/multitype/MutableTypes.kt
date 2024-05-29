@@ -22,8 +22,8 @@ package com.drakeet.multitype
  * @author Drakeet Xu
  */
 open class MutableTypes constructor(
-  open val initialCapacity: Int = 0,
-  open val types: MutableList<Type<*>> = ArrayList(initialCapacity),
+    open val initialCapacity: Int = 0,
+    open val types: MutableList<Type<*>> = ArrayList(initialCapacity),
 ) : Types {
 
     override val size: Int get() = types.size
@@ -46,4 +46,5 @@ open class MutableTypes constructor(
         }
         return types.indexOfFirst { it.clazz.isAssignableFrom(clazz) }
     }
+
 }

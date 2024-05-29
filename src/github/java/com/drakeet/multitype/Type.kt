@@ -20,7 +20,7 @@ package com.drakeet.multitype
  * @author Drakeet Xu
  */
 data class Type<T>(
-  val clazz: Class<out T>,
-  val delegate: ItemViewDelegate<T, *>,
-  val linker: Linker<T>,
+    val clazz: Class<out T>,
+    val delegate: ItemViewDelegate<T, *>,
+    val linker: Linker<T>,
 )

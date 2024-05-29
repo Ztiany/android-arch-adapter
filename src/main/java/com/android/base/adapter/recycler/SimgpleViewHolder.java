@@ -7,7 +7,7 @@ import com.android.base.adapter.ItemHelper;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ViewHolder extends RecyclerView.ViewHolder {
+public class SimgpleViewHolder extends RecyclerView.ViewHolder {
 
     private final ItemHelper mHelper;
 
@@ -15,7 +15,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         return mHelper;
     }
 
-    public ViewHolder(View itemView) {
+    public SimgpleViewHolder(View itemView) {
         super(itemView);
         mHelper = new ItemHelper(itemView);
     }

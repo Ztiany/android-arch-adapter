@@ -58,4 +58,5 @@ interface Types {
      * or -1 if this [Types] does not contain the class.
      */
     fun firstIndexOf(clazz: Class<*>): Int
+
 }
