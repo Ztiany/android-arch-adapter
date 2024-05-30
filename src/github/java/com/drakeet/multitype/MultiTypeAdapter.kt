@@ -29,7 +29,7 @@ import kotlin.reflect.KClass
 abstract class MultiTypeAdapter @JvmOverloads constructor(
     open val initialCapacity: Int = 0,
     open var types: Types = MutableTypes(initialCapacity),
-) : RecyclerView.Adapter<ViewHolder>() {
+) : RecyclerView.Adapter<ViewHolder>(), Items {
 
     /**
      * Registers a type class and its item view delegate. If you have registered the class,
@@ -78,6 +78,7 @@ abstract class MultiTypeAdapter @JvmOverloads constructor(
     internal fun <T> register(type: Type<T>) {
         types.register(type)
         type.delegate._adapter = this
+        type.delegate._items = this
     }
 
     /**

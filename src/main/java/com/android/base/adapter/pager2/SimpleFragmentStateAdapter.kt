@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.android.base.adapter.DataManager
-import com.android.base.adapter.recycler.RecyclerDataManagerImpl
+import com.android.base.adapter.recycler.segment.RecyclerDataManagerImpl
 
 class SimpleFragmentStateAdapter<T>(
     fragmentManager: FragmentManager,

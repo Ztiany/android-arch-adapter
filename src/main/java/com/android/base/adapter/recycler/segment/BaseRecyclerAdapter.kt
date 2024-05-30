@@ -1,4 +1,4 @@
-package com.android.base.adapter.recycler
+package com.android.base.adapter.recycler.segment
 
 import android.content.Context
 import android.view.LayoutInflater

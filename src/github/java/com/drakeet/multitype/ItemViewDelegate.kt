@@ -31,11 +31,14 @@ abstract class ItemViewDelegate<T, VH : ViewHolder> {
     @Suppress("PropertyName")
     internal var _adapter: RecyclerView.Adapter<*>? = null
 
+    @Suppress("PropertyName")
+    internal var _items: Items? = null
+
     /**
      * Gets the associated [MultiTypeAdapter].
      * @since v2.3.4
      */
-    val adapter: RecyclerView.Adapter<*>?
+    val adapter: RecyclerView.Adapter<*>
         get() {
             if (_adapter == null) {
                 throw IllegalStateException(
@@ -43,6 +46,19 @@ abstract class ItemViewDelegate<T, VH : ViewHolder> {
                 )
             }
             return _adapter!!
+        }
+
+    /**
+     * Gets the associated [Items] by which you can interact with the items data set.
+     */
+    val items: Items
+        get() {
+            if (_items == null) {
+                throw IllegalStateException(
+                    "This $this has not been attached to MultiTypeAdapter yet.  You should not call the method before registering the delegate."
+                )
+            }
+            return _items!!
         }
 
     abstract fun onCreateViewHolder(context: Context, parent: ViewGroup): VH

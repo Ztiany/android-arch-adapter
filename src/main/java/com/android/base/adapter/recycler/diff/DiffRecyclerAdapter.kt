@@ -1,4 +1,4 @@
-package com.android.base.adapter.recycler
+package com.android.base.adapter.recycler.diff
 
 import android.content.Context
 import androidx.recyclerview.widget.AdapterListUpdateCallback
@@ -19,7 +19,9 @@ import java.util.concurrent.Executor
 abstract class DiffRecyclerAdapter<T, VH : RecyclerView.ViewHolder> @JvmOverloads constructor(
     protected val context: Context,
     itemCallback: DiffUtil.ItemCallback<T>,
+    /** Normally, you don't need to provide a [Executor]. */
     executor: Executor? = null,
+    /** The count of item as the list's header. */
     private val headerCount: Int = 0,
 ) : RecyclerView.Adapter<VH>(), DataManager<T> {
 

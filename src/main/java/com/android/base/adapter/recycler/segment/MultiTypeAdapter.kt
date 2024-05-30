@@ -1,4 +1,4 @@
-package com.android.base.adapter.recycler
+package com.android.base.adapter.recycler.segment
 
 import android.content.Context
 import com.android.base.adapter.DataManager
@@ -20,6 +20,10 @@ open class MultiTypeAdapter : com.drakeet.multitype.MultiTypeAdapter, DataManage
     constructor(context: Context, items: List<Any>, initialTypeCapacity: Int = 0) : super(initialCapacity = initialTypeCapacity) {
         this.context = context
         dataManager = RecyclerDataManagerImpl(items.toMutableList(), this)
+    }
+
+    override fun getItems(): List<Any> {
+        return dataManager.getList()
     }
 
     override fun add(element: Any) {

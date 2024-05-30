@@ -1,4 +1,4 @@
-package com.android.base.adapter.recycler
+package com.android.base.adapter.recycler.segment
 
 import androidx.recyclerview.widget.RecyclerView
 import com.android.base.adapter.DataManager

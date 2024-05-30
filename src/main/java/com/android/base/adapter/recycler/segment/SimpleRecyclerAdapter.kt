@@ -1,9 +1,10 @@
-package com.android.base.adapter.recycler
+package com.android.base.adapter.recycler.segment
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
+import com.android.base.adapter.recycler.ViewBindingViewHolder
 
 /**
  * A simple way to build a simple list. If you want to build a multi type list, perhaps you need to use [MultiTypeAdapter].

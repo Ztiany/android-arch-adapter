@@ -1,4 +1,4 @@
-package com.android.base.adapter.recycler
+package com.android.base.adapter.recycler.paging
 
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
@@ -9,6 +9,7 @@ import com.drakeet.multitype.DefaultLinker
 import com.drakeet.multitype.DelegateNotFoundException
 import com.drakeet.multitype.ItemViewBinder
 import com.drakeet.multitype.ItemViewDelegate
+import com.drakeet.multitype.Items
 import com.drakeet.multitype.MutableTypes
 import com.drakeet.multitype.OneToManyBuilder
 import com.drakeet.multitype.OneToManyFlow
@@ -25,7 +26,7 @@ class PagingMultiTypeAdapter<T : Any>(
     workerDispatcher: CoroutineContext = Dispatchers.Default,
     initialTypeCapacity: Int = 0,
     private val types: Types = MutableTypes(initialTypeCapacity),
-) : PagingDataAdapter<T, RecyclerView.ViewHolder>(diffCallback, mainDispatcher, workerDispatcher) {
+) : PagingDataAdapter<T, RecyclerView.ViewHolder>(diffCallback, mainDispatcher, workerDispatcher), Items {
 
     /**
      * Registers a type class and its item view delegate. If you have registered the class,
@@ -216,8 +217,12 @@ class PagingMultiTypeAdapter<T : Any>(
         }
     }
 
-    fun requireItem(position: Int): T {
+    private fun requireItem(position: Int): T {
         return getItem(position) ?: throw IllegalStateException("Item not found at $position")
+    }
+
+    override fun getItems(): List<Any> {
+        return snapshot().items
     }
 
 }
