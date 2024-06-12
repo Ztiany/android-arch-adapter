@@ -16,8 +16,8 @@ abstract class ViewBindingItemViewBinder<T, VB : ViewBinding> : ItemViewBinder<T
         }
     }
 
-    protected open fun onViewHolderCreated(viewHolder: ViewBindingViewHolder<VB>) = Unit
-
     abstract fun provideViewBinding(inflater: LayoutInflater, parent: ViewGroup): VB
+
+    protected open fun onViewHolderCreated(viewHolder: ViewBindingViewHolder<VB>) = Unit
 
 }

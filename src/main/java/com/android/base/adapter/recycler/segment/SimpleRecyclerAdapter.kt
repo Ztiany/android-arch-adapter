@@ -22,8 +22,6 @@ abstract class SimpleRecyclerAdapter<T, VB : ViewBinding>(
         }
     }
 
-    abstract fun provideViewBinding(parent: ViewGroup, inflater: LayoutInflater): VB
-
     override fun onBindViewHolder(viewHolder: ViewBindingViewHolder<VB>, position: Int) {
         val item = getItem(position)
         if (item != null) {
@@ -32,6 +30,8 @@ abstract class SimpleRecyclerAdapter<T, VB : ViewBinding>(
             onOverPosition(viewHolder, position)
         }
     }
+
+    abstract fun provideViewBinding(parent: ViewGroup, inflater: LayoutInflater): VB
 
     abstract fun bindItem(viewHolder: ViewBindingViewHolder<VB>, item: T)
 
