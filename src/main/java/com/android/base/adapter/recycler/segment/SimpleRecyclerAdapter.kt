@@ -26,7 +26,7 @@ abstract class SimpleRecyclerAdapter<T, VB : ViewBinding>(
         val item = getItem(position)
         if (item != null) {
             bindItem(viewHolder, item)
-        } else {
+        }else {
             onOverPosition(viewHolder, position)
         }
     }
