@@ -47,13 +47,20 @@ abstract class BaseListAdapter<T, VH : ViewHolder>(
         viewHolder.position = position
         viewHolder.type = type
         val item = getItem(position)
-        onBindData(viewHolder, item)
+        if (item != null) {
+            onBindItem(viewHolder, item)
+        } else {
+            onBindEmptyItem(viewHolder)
+        }
         return viewHolder.itemView
     }
 
-    protected abstract fun onBindData(viewHolder: VH, item: T?)
 
     protected abstract fun onCreateViewHolder(layoutInflater: LayoutInflater, parent: ViewGroup, type: Int): VH
+
+    protected abstract fun onBindItem(viewHolder: VH, item: T?)
+
+    open fun onBindEmptyItem(viewHolder: VH) = Unit
 
     override fun add(element: T) {
         dataManager.add(element)

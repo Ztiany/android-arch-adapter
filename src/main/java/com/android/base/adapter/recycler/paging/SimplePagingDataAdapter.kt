@@ -30,18 +30,18 @@ abstract class SimplePagingDataAdapter<T : Any, VB : ViewBinding>(
     override fun onBindViewHolder(viewHolder: ViewBindingViewHolder<VB>, position: Int) {
         val item = getItem(position)
         if (item != null) {
-            bindItem(viewHolder, item)
+            onBindItem(viewHolder, item)
         } else {
-            onOverPosition(viewHolder, position)
+            onBindNullItem(viewHolder, position)
         }
     }
 
     abstract fun provideViewBinding(parent: ViewGroup, inflater: LayoutInflater): VB
 
-    abstract fun bindItem(viewHolder: ViewBindingViewHolder<VB>, item: T)
-
     protected open fun onViewHolderCreated(viewHolder: ViewBindingViewHolder<VB>) = Unit
 
-    protected open fun onOverPosition(viewHolder: ViewBindingViewHolder<VB>, position: Int) = Unit
+    abstract fun onBindItem(viewHolder: ViewBindingViewHolder<VB>, item: T)
+
+    protected open fun onBindNullItem(viewHolder: ViewBindingViewHolder<VB>, position: Int) = Unit
 
 }
