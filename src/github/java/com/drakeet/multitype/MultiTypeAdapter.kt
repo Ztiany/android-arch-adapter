@@ -142,8 +142,7 @@ abstract class MultiTypeAdapter @JvmOverloads constructor(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: List<Any>) {
-        val item = requireItem(position)
-        getOutDelegateByViewHolder(holder).onBindViewHolder(holder, item, payloads)
+        getOutDelegateByPosition(position)?.onBindViewHolder(holder, requireItem(position), payloads)
     }
 
     /**
@@ -170,7 +169,7 @@ abstract class MultiTypeAdapter @JvmOverloads constructor(
      * @see ItemViewDelegate.onViewRecycled
      */
     override fun onViewRecycled(holder: ViewHolder) {
-        getOutDelegateByViewHolder(holder).onViewRecycled(holder)
+        getOutDelegateByViewHolder(holder)?.onViewRecycled(holder)
     }
 
     /**
@@ -188,7 +187,7 @@ abstract class MultiTypeAdapter @JvmOverloads constructor(
      * @see ItemViewDelegate.onFailedToRecycleView
      */
     override fun onFailedToRecycleView(holder: ViewHolder): Boolean {
-        return getOutDelegateByViewHolder(holder).onFailedToRecycleView(holder)
+        return getOutDelegateByViewHolder(holder)?.onFailedToRecycleView(holder) ?: false
     }
 
     /**
@@ -200,7 +199,7 @@ abstract class MultiTypeAdapter @JvmOverloads constructor(
      * @see ItemViewDelegate.onViewAttachedToWindow
      */
     override fun onViewAttachedToWindow(holder: ViewHolder) {
-        getOutDelegateByViewHolder(holder).onViewAttachedToWindow(holder)
+        getOutDelegateByViewHolder(holder)?.onViewAttachedToWindow(holder)
     }
 
     /**
@@ -212,12 +211,27 @@ abstract class MultiTypeAdapter @JvmOverloads constructor(
      * @see ItemViewDelegate.onViewDetachedFromWindow
      */
     override fun onViewDetachedFromWindow(holder: ViewHolder) {
-        getOutDelegateByViewHolder(holder).onViewDetachedFromWindow(holder)
+        getOutDelegateByViewHolder(holder)?.onViewDetachedFromWindow(holder)
     }
 
-    private fun getOutDelegateByViewHolder(holder: ViewHolder): ItemViewDelegate<Any, ViewHolder> {
+    private fun getOutDelegateByViewHolder(holder: ViewHolder): ItemViewDelegate<Any, ViewHolder>? {
+        val itemViewType = holder.itemViewType
+        if (itemViewType >= types.size) {
+            Timber.w("getOutDelegateByViewHolder returned null, holder.itemViewType = $itemViewType, types.size = ${types.size} ")
+            return null
+        }
         @Suppress("UNCHECKED_CAST")
-        return types.getType<Any>(holder.itemViewType).delegate as ItemViewDelegate<Any, ViewHolder>
+        return types.getType<Any>(itemViewType).delegate as ItemViewDelegate<Any, ViewHolder>
+    }
+
+    private fun getOutDelegateByPosition(position: Int): ItemViewDelegate<Any, ViewHolder>? {
+        val itemViewType = getItemViewType(position)
+        if (itemViewType >= types.size) {
+            Timber.w("getOutDelegateByPosition returned null, position = $position itemViewType = ${itemViewType}, types.size = ${types.size} ")
+            return null
+        }
+        @Suppress("UNCHECKED_CAST")
+        return types.getType<Any>(itemViewType).delegate as ItemViewDelegate<Any, ViewHolder>
     }
 
     @Throws(DelegateNotFoundException::class)

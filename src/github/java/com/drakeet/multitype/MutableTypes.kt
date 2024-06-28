@@ -21,7 +21,7 @@ package com.drakeet.multitype
  *
  * @author Drakeet Xu
  */
-open class MutableTypes constructor(
+open class MutableTypes(
     open val initialCapacity: Int = 0,
     open val types: MutableList<Type<*>> = ArrayList(initialCapacity),
 ) : Types {

@@ -1,10 +1,13 @@
 package com.android.base.adapter.recycler.paging
 
+import android.content.Context
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.*
 import com.drakeet.multitype.DefaultLinker
 import com.drakeet.multitype.DelegateNotFoundException
 import com.drakeet.multitype.ItemViewBinder
@@ -26,7 +29,11 @@ class PagingMultiTypeAdapter<T : Any>(
     workerDispatcher: CoroutineContext = Dispatchers.Default,
     initialTypeCapacity: Int = 0,
     private val types: Types = MutableTypes(initialTypeCapacity),
-) : PagingDataAdapter<T, RecyclerView.ViewHolder>(diffCallback, mainDispatcher, workerDispatcher), Items {
+) : PagingDataAdapter<T, ViewHolder>(diffCallback, mainDispatcher, workerDispatcher), Items {
+
+    private class EmptyViewHolder(context: Context) : ViewHolder(View(context))
+
+    private val emptyType = Int.MAX_VALUE - 99
 
     /**
      * Registers a type class and its item view delegate. If you have registered the class,
@@ -126,20 +133,44 @@ class PagingMultiTypeAdapter<T : Any>(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return indexInTypesOf(position, requireItem(position))
+        val item = getItemSafely(position) ?: return emptyType
+        return try {
+            indexInTypesOf(position, item)
+        } catch (e: DelegateNotFoundException) {
+            Timber.d(e, "indexInTypesOf, position = $position snapshot.size = ${snapshot().size}, types.size = ${types.size}")
+            emptyType
+        }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, indexViewType: Int): RecyclerView.ViewHolder {
+    private fun getItemSafely(position: Int): Any? {
+        val item = try {
+            getItem(position)
+        } catch (e: IndexOutOfBoundsException) {
+            Timber.d(e, "getItemViewType, position = $position snapshot.size = ${snapshot().size}")
+        }
+        return item
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, indexViewType: Int): ViewHolder {
+        if (indexViewType == emptyType) {
+            return EmptyViewHolder(parent.context)
+        }
         return types.getType<Any>(indexViewType).delegate.onCreateViewHolder(parent.context, parent)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         onBindViewHolder(holder, position, emptyList())
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
-        val item = requireItem(position)
-        getOutDelegateByViewHolder(holder).onBindViewHolder(holder, item, payloads)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: List<Any>) {
+        if (holder.javaClass == EmptyViewHolder::class.java) {
+            Timber.w("onBindViewHolder, but holder is EmptyViewHolder, position = $position")
+            return
+        }
+        // We don't use holder.itemViewType here because it is not always correct especially when RecyclerView works with Paging.
+        getItemSafely(position)?.let {
+            getOutDelegateByPosition(position)?.onBindViewHolder(holder, it, payloads)
+        }
     }
 
     /**
@@ -150,8 +181,8 @@ class PagingMultiTypeAdapter<T : Any>(
      * @see RecyclerView.Adapter.onViewRecycled
      * @see ItemViewDelegate.onViewRecycled
      */
-    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
-        getOutDelegateByViewHolder(holder).onViewRecycled(holder)
+    override fun onViewRecycled(holder: ViewHolder) {
+        getOutDelegateByViewHolder(holder)?.onViewRecycled(holder)
     }
 
     /**
@@ -168,8 +199,8 @@ class PagingMultiTypeAdapter<T : Any>(
      * @see RecyclerView.Adapter.onFailedToRecycleView
      * @see ItemViewDelegate.onFailedToRecycleView
      */
-    override fun onFailedToRecycleView(holder: RecyclerView.ViewHolder): Boolean {
-        return getOutDelegateByViewHolder(holder).onFailedToRecycleView(holder)
+    override fun onFailedToRecycleView(holder: ViewHolder): Boolean {
+        return getOutDelegateByViewHolder(holder)?.onFailedToRecycleView(holder) ?: false
     }
 
     /**
@@ -180,8 +211,8 @@ class PagingMultiTypeAdapter<T : Any>(
      * @see RecyclerView.Adapter.onViewAttachedToWindow
      * @see ItemViewDelegate.onViewAttachedToWindow
      */
-    override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
-        getOutDelegateByViewHolder(holder).onViewAttachedToWindow(holder)
+    override fun onViewAttachedToWindow(holder: ViewHolder) {
+        getOutDelegateByViewHolder(holder)?.onViewAttachedToWindow(holder)
     }
 
     /**
@@ -192,13 +223,30 @@ class PagingMultiTypeAdapter<T : Any>(
      * @see RecyclerView.Adapter.onViewDetachedFromWindow
      * @see ItemViewDelegate.onViewDetachedFromWindow
      */
-    override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
-        getOutDelegateByViewHolder(holder).onViewDetachedFromWindow(holder)
+    override fun onViewDetachedFromWindow(holder: ViewHolder) {
+        getOutDelegateByViewHolder(holder)?.onViewDetachedFromWindow(holder)
     }
 
-    private fun getOutDelegateByViewHolder(holder: RecyclerView.ViewHolder): ItemViewDelegate<Any, RecyclerView.ViewHolder> {
+    private fun getOutDelegateByViewHolder(holder: ViewHolder): ItemViewDelegate<Any, ViewHolder>? {
+        // Don't use holder.bindingAdapterPosition here, because this Adapter maybe used with ConcatAdapter, which may cause
+        // app to crash.  see [ConcatAdapterController#getLocalAdapterPosition].
+        val itemViewType = holder.itemViewType
+        if (itemViewType >= types.size) {
+            Timber.w("getOutDelegateByViewHolder returned null, holder.itemViewType = $itemViewType, types.size = ${types.size} ")
+            return null
+        }
         @Suppress("UNCHECKED_CAST")
-        return types.getType<Any>(holder.itemViewType).delegate as ItemViewDelegate<Any, RecyclerView.ViewHolder>
+        return types.getType<Any>(itemViewType).delegate as ItemViewDelegate<Any, ViewHolder>
+    }
+
+    private fun getOutDelegateByPosition(position: Int): ItemViewDelegate<Any, ViewHolder>? {
+        val itemViewType = getItemViewType(position)
+        if (itemViewType >= types.size) {
+            Timber.w("getOutDelegateByPosition returned null, position = $position itemViewType = ${itemViewType}, types.size = ${types.size} ")
+            return null
+        }
+        @Suppress("UNCHECKED_CAST")
+        return types.getType<Any>(itemViewType).delegate as ItemViewDelegate<Any, ViewHolder>
     }
 
     @Throws(DelegateNotFoundException::class)
@@ -215,10 +263,6 @@ class PagingMultiTypeAdapter<T : Any>(
         if (types.unregister(clazz)) {
             Timber.w("The type ${clazz.simpleName} you originally registered is now overwritten.")
         }
-    }
-
-    private fun requireItem(position: Int): T {
-        return getItem(position) ?: throw IllegalStateException("Item not found at $position")
     }
 
     override fun getItems(): List<Any> {
