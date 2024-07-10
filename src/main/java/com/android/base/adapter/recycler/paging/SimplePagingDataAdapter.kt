@@ -6,6 +6,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.viewbinding.ViewBinding
 import com.android.base.adapter.recycler.ViewBindingViewHolder
+import com.android.base.viewbinding.inflateBindingWithParameterizedType
 import kotlinx.coroutines.Dispatchers
 import kotlin.coroutines.CoroutineContext
 
@@ -36,7 +37,9 @@ abstract class SimplePagingDataAdapter<T : Any, VB : ViewBinding>(
         }
     }
 
-    abstract fun provideViewBinding(parent: ViewGroup, inflater: LayoutInflater): VB
+    protected open fun provideViewBinding(parent: ViewGroup, inflater: LayoutInflater): VB {
+        return inflateBindingWithParameterizedType(inflater, parent, false)
+    }
 
     protected open fun onViewHolderCreated(viewHolder: ViewBindingViewHolder<VB>) = Unit
 

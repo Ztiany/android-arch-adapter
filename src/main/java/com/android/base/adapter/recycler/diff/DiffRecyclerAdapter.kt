@@ -21,7 +21,7 @@ abstract class DiffRecyclerAdapter<T, VH : RecyclerView.ViewHolder> @JvmOverload
     itemCallback: DiffUtil.ItemCallback<T>,
     /** Normally, you don't need to provide a [Executor]. */
     executor: Executor? = null,
-    /** The count of item as the list's header. */
+    /** The count of items as the list's header. */
     private val headerCount: Int = 0,
 ) : RecyclerView.Adapter<VH>(), DataManager<T> {
 
@@ -224,7 +224,6 @@ abstract class DiffRecyclerAdapter<T, VH : RecyclerView.ViewHolder> @JvmOverload
 fun <T, VH : RecyclerView.ViewHolder> DiffRecyclerAdapter<T, VH>.submitList(list: List<T>) {
     setDataSource(list.toMutableList())
 }
-
 
 /**
  * refer to [Android 官方架构组件 Paging-Ex: 为分页列表添加 Header 和 Footer](https://juejin.im/post/6844903814189826062) for details.

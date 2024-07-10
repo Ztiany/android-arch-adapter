@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.android.base.adapter.recycler.ViewBindingViewHolder
+import com.android.base.viewbinding.inflateBindingWithParameterizedType
 
 /**
  * A simple way to build a simple list. If you want to build a multi type list, perhaps you need to use [MultiTypeAdapter].
@@ -31,7 +32,9 @@ abstract class SimpleRecyclerAdapter<T, VB : ViewBinding>(
         }
     }
 
-    abstract fun provideViewBinding(parent: ViewGroup, inflater: LayoutInflater): VB
+    protected open fun provideViewBinding(parent: ViewGroup, inflater: LayoutInflater): VB {
+        return inflateBindingWithParameterizedType(inflater, parent, false)
+    }
 
     protected open fun onViewHolderCreated(viewHolder: ViewBindingViewHolder<VB>) = Unit
 

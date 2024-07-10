@@ -22,6 +22,9 @@ android {
 }
 
 dependencies {
+    //  base
+    api(libs.base.arch.viewbinding)
+
     // androidx
     api(libs.androidx.annotations)
     api(libs.androidx.recyclerview)
