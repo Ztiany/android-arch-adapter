@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
+import com.android.base.viewbinding.inflateBindingWithParameterizedType
 
 abstract class SimpleListAdapter<T, VB : ViewBinding>(
     context: Context,
@@ -18,7 +19,9 @@ abstract class SimpleListAdapter<T, VB : ViewBinding>(
         onViewHolderCreated(it)
     }
 
-    abstract fun provideViewBinding(parent: ViewGroup, inflater: LayoutInflater): VB
+    protected open fun provideViewBinding(parent: ViewGroup, inflater: LayoutInflater): VB {
+        return inflateBindingWithParameterizedType(inflater, parent, false)
+    }
 
     protected open fun onViewHolderCreated(viewHolder: ViewBindingViewHolder<VB>) = Unit
 
