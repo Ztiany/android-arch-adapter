@@ -24,20 +24,16 @@ android {
 dependencies {
     //  base
     api(libs.base.arch.viewbinding)
-
     // androidx
     api(libs.androidx.annotations)
     api(libs.androidx.recyclerview)
     api(libs.androidx.viewpager2)
     compileOnly(libs.androidx.paging.runtime)
-
     // kotlin
     api(libs.kotlin.stdlib)
     api(libs.kotlin.reflect)
-
     // adapter
     api(libs.ztiany.loadmoreadapter)
-
     // log
-    api(libs.jakewharton.timber)
+    implementation(libs.jakewharton.timber)
 }
