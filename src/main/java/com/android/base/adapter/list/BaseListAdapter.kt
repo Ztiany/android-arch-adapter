@@ -74,8 +74,8 @@ abstract class BaseListAdapter<T, VH : ViewHolder>(
         dataManager.addItems(elements)
     }
 
-    override fun addItemsChecked(elements: List<T>) {
-        dataManager.addItemsChecked(elements)
+    override fun addItemsDistinguished(elements: List<T>) {
+        dataManager.addItemsDistinguished(elements)
     }
 
     override fun addItemsAt(location: Int, elements: List<T>) {

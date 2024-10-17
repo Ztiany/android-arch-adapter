@@ -38,8 +38,8 @@ open class MultiTypeAdapter : com.drakeet.multitype.MultiTypeAdapter, DataManage
         dataManager.addItems(elements)
     }
 
-    override fun addItemsChecked(elements: List<Any>) {
-        dataManager.addItemsChecked(elements)
+    override fun addItemsDistinguished(elements: List<Any>) {
+        dataManager.addItemsDistinguished(elements)
     }
 
     override fun addItemsAt(location: Int, elements: List<Any>) {

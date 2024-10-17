@@ -42,8 +42,8 @@ abstract class BaseRecyclerAdapter<T, VH : RecyclerView.ViewHolder> @JvmOverload
         dataManager.addItems(elements)
     }
 
-    override fun addItemsChecked(elements: List<T>) {
-        dataManager.addItemsChecked(elements)
+    override fun addItemsDistinguished(elements: List<T>) {
+        dataManager.addItemsDistinguished(elements)
     }
 
     override fun addItemsAt(location: Int, elements: List<T>) {

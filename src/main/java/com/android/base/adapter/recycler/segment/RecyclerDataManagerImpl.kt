@@ -31,7 +31,7 @@ internal class RecyclerDataManagerImpl<T>(
         addItemsAt(getDataSize(), elements)
     }
 
-    override fun addItemsChecked(elements: List<T>) {
+    override fun addItemsDistinguished(elements: List<T>) {
         if (elements.isEmpty()) {
             return
         }

@@ -81,7 +81,7 @@ abstract class DiffRecyclerAdapter<T, VH : RecyclerView.ViewHolder> @JvmOverload
         asyncListDiffer.submitList(newList)
     }
 
-    override fun addItemsChecked(elements: List<T>) {
+    override fun addItemsDistinguished(elements: List<T>) {
         if (elements.isEmpty()) {
             return
         }

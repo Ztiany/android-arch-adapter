@@ -12,11 +12,10 @@ interface DataManager<T> {
     fun addItems(elements: List<T>)
 
     /**
-     * 添加元素前会使用 equals 方法进行比较。
-     *
-     * @param elements 元素
+     * Before adding elements, the equals method will be used for comparison.
+     * If the element already exists in the collection, it will not be added.
      */
-    fun addItemsChecked(elements: List<T>)
+    fun addItemsDistinguished(elements: List<T>)
 
     fun addItemsAt(location: Int, elements: List<T>)
 
@@ -25,14 +24,12 @@ interface DataManager<T> {
     fun replaceAt(index: Int, element: T)
 
     /**
-     * 清除之前集合中的数据，然后把 elements 添加到之前的集合中，不会使用 elements 作为数据源。
-     *
-     * @param elements 元素
+     * Clear the previous data in the collection and add the elements to the previous collection, not using elements as the data source.
      */
     fun replaceAll(elements: List<T>)
 
     /**
-     * 此方法会使用 [newDataSource] 直接替换掉之前的数据源。
+     * This method will directly replace the previous data source with [newDataSource].
      */
     fun setDataSource(newDataSource: MutableList<T>)
 
